@@ -1,0 +1,459 @@
+       * {
+           box-sizing: border-box;
+           margin: 0;
+           padding: 0;
+       }
+
+       body {
+           font-family: sans-serif;
+           background: black;
+           width: 100%;
+           color: #fff;
+
+       }
+
+       .header {
+           display: flex;
+           justify-content: space-between;
+           align-items: center;
+           /* background-color: rgba(0, 0, 0, 0.4); */
+           color: white;
+           padding: 15px 20px;
+           position: fixed;
+           width: 100%;
+           height: 10vh;
+           top: 0;
+           z-index: 1000;
+           transition: background 0.5s ease-in-out;
+           /* Add a smooth transition for the background */
+       }
+
+       .scrolled-header {
+           background-color: rgba(0, 0, 0, 0.8);
+           /* New background color when scrolled */
+       }
+
+       .logo {
+           font-size: 24px;
+           color: #D4AF37;
+           font-weight: bold;
+       }
+
+       .navbar {
+           display: flex;
+           gap: 20px;
+       }
+
+       .navbar a {
+           color: white;
+           text-decoration: none;
+           font-size: 1rem;
+           font-weight: 400;
+       }
+
+       .navbar a:hover {
+           color: #9B7BAF;
+       }
+
+       .dropdown {
+           position: relative;
+       }
+
+       .dropdown-menu {
+           display: none;
+           position: absolute;
+           background-color: rgba(0, 0, 0, 0.8);
+           top: 100%;
+           left: 0;
+           min-width: 150px;
+           flex-direction: column;
+           z-index: 1001;
+       }
+
+       .dropdown-menu a {
+           padding: 10px;
+           color: white;
+           text-align: left;
+           display: block;
+           font-size: 14px;
+       }
+
+       .dropdown-menu a:hover {
+           background-color: black;
+           color: #9B7BAF;
+       }
+
+       .dropdown:hover .dropdown-menu {
+           display: flex;
+       }
+
+       .right-icons {
+           display: flex;
+           gap: 15px;
+           align-items: center;
+       }
+
+       .right-icons a {
+           color: white;
+           font-size: 1.2rem;
+           font-weight: 400;
+       }
+
+       .right-icons a:hover {
+           color: #9B7BAF
+       }
+
+
+       .menu-toggle {
+           display: none;
+           background: none;
+           border: none;
+           color: white;
+           font-size: 22px;
+           cursor: pointer;
+       }
+
+       /* Carousel Styles */
+       .carousel-container {
+           margin-top: 0px;
+           /* header height */
+           width: 100%;
+           height: 100vh;
+           overflow: hidden;
+           position: relative;
+
+       }
+
+       /* NEW: Full-coverage transparent black overlay for the carousel */
+       .carousel-container::before {
+           content: '';
+           position: absolute;
+           top: 0;
+           left: 0;
+           width: 100%;
+           height: 100%;
+           background-color: rgba(0, 0, 0, 0.4);
+           /* Transparent black (40% opaque) */
+           z-index: 2;
+           /* Below content (15), buttons (10), but above slides */
+           pointer-events: none;
+           /* Allows mouse events to pass through to elements below */
+       }
+
+       .carousel-slides {
+           display: flex;
+           height: 100%;
+           width: 100%;
+           /* Ensure slides container takes full width */
+           transition: transform 0.5s ease-in-out;
+           z-index: 1;
+           /* Below the overlay */
+       }
+
+       .carousel-slide {
+           min-width: 100%;
+           height: 100%;
+           overflow: hidden;
+       }
+
+       .carousel-slide img {
+           width: 100%;
+           height: 100%;
+           /* object-fit: cover; */
+           object-fit: fill;
+           display: block;
+           background-image: rgba(0, 0, 0, 0.5);
+
+       }
+
+       @keyframes zoomIn {
+           0% {
+               transform: scale(1);
+           }
+
+           100% {
+               transform: scale(1.1);
+           }
+       }
+
+       /* Carousel Overlay Content */
+       .carousel-overlay-content {
+           position: absolute;
+           top: 50%;
+           left: 5%;
+           /* Position from left edge */
+           transform: translateY(-50%);
+           z-index: 15;
+           /* Higher than carousel buttons */
+           color: white;
+           max-width: 60%;
+           /* Limit width to take up less than half the screen */
+           padding: 30px;
+
+           border-radius: 10px;
+           /* Rounded corners for the content box */
+           text-align: left;
+           /* Align text to left */
+
+       }
+
+       .kalyam-heading {
+           font-family: "Montserrat", Sans-serif;
+           font-weight: 400;
+           line-height: 1.2em;
+           font-size: 3.8em;
+           /* Larger heading */
+           margin-bottom: 10px;
+           letter-spacing: -1px;
+           /* text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); */
+       }
+
+       .carousel-overlay-content h4 {
+           color: #D4AF37;
+           /* Golden color */
+           font-size: 1.5em;
+           /* Sub-heading size */
+           margin-bottom: 15px;
+           font-weight: 500;
+           text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+       }
+
+       .carousel-overlay-content h4 span {
+           font-weight: 700;
+           /* Emphasize with underline */
+           text-decoration-color: #D4AF37;
+       }
+
+       .carousel-overlay-content p {
+           font-size: 1.1em;
+           /* Paragraph size */
+           line-height: 1.6;
+           margin-bottom: 25px;
+           text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+       }
+
+       .common-btn {
+           background: linear-gradient(to right, #4C345D, #9B7BAF);
+           /* Blue gradient */
+           color: white;
+           border: none;
+           padding: 12px 25px;
+           font-size: 1.05em;
+           border-radius: 30px;
+           /* Pill-shaped buttons */
+           cursor: pointer;
+           margin-right: 15px;
+           transition: all 0.3s ease;
+           box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+           text-transform: uppercase;
+           font-weight: 600;
+           letter-spacing: 0.5px;
+       }
+
+       .common-btn:hover {
+           background: linear-gradient(to left, #472f58, #9B7BAF);
+           transform: translateY(-3px);
+           /* Lift effect on hover */
+           box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+       }
+
+
+       /*--------------------------------------------------------------
+# Services Section
+--------------------------------------------------------------*/
+       .services-section {
+           padding: 20px 20px;
+           text-align: center;
+           /* max-width: 1000px; */
+           width: 90%;
+           margin: auto;
+           background-color: #070707;
+           box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+       }
+
+       .subtitle {
+           color: #845ec2;
+           letter-spacing: 1px;
+           margin-bottom: 20px;
+           font-weight: 500;
+           padding: 10px;
+           font-size: 1.6rem;
+
+       }
+
+       .title {
+           font-size: 2.2rem;
+           font-weight: 100;
+           margin-bottom: 20px;
+           color: #D4AF37;
+       }
+
+       .description {
+           letter-spacing: 2px;
+           font-size: 1.2rem;
+           line-height: 1.6;
+           margin-bottom: 30px;
+       }
+
+       .divider img {
+           display: inline-block;
+           border-radius: 5px;
+           margin-bottom: 30px;
+       }
+
+       .service-images {
+           display: flex;
+           gap: 20px;
+           flex-wrap: wrap;
+           justify-content: center;
+           width: 100;
+       }
+
+       .service-images img {
+           width: 100%;
+           max-width: 450px;
+           height: 220px;
+           object-fit: cover;
+           border-radius: 10px;
+           box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+           transition: transform 0.3s ease;
+       }
+
+       /* .service-images img:hover {
+           transform: scale(1.05);
+       } */
+
+       .services-section .container {
+           position: relative;
+       }
+
+
+       .services-section .overlay {
+           position: absolute;
+           bottom: 0;
+           left: 0;
+           right: 0;
+           background-color: rgba(0, 0, 0, 0.6);
+           overflow: hidden;
+           width: 100%;
+           height: 0;
+           transition: .5s ease;
+           border-radius: 10px;
+       }
+
+       .services-section .container:hover .overlay {
+           height: 100%;
+       }
+
+       .services-section .text {
+           white-space: nowrap;
+           color: white;
+           font-size: 20px;
+           position: absolute;
+           overflow: hidden;
+           top: 50%;
+           left: 50%;
+           transform: translate(-50%, -50%);
+           -ms-transform: translate(-50%, -50%);
+       }
+
+
+       /* Mobile View */
+       @media (max-width: 768px) {
+           .navbar {
+               display: none;
+               position: absolute;
+               top: 60px;
+               left: 0;
+               right: 0;
+               background-color: #333;
+               flex-direction: column;
+               text-align: center;
+               padding: 10px 0;
+               border-radius: 0 0 8px 8px;
+           }
+
+           .navbar.active {
+               display: flex;
+           }
+
+           .menu-toggle {
+               display: block;
+           }
+
+           .dropdown-menu {
+               position: static;
+               background-color: #333;
+               border-radius: 0;
+               box-shadow: none;
+           }
+
+           .dropdown:hover .dropdown-menu {
+               display: none;
+           }
+
+           .dropdown.active .dropdown-menu {
+               display: flex;
+               justify-content: center;
+           }
+
+           /* Carousel Overlay on Mobile */
+           .carousel-overlay-content {
+               max-width: 90%;
+               /* Wider on mobile */
+               left: 50%;
+               transform: translate(-50%, -50%);
+               /* Center horizontally */
+               padding: 20px;
+
+           }
+
+           .kalyam-heading {
+               font-size: 2.2em;
+               /* Smaller heading on mobile */
+           }
+
+           .carousel-overlay-content h4 {
+               font-size: 1.2em;
+           }
+
+           .carousel-overlay-content p {
+               font-size: 0.9em;
+           }
+
+           .common-btn {
+               margin: 10px auto;
+               /* Center buttons */
+               display: block;
+               /* Stack buttons */
+           }
+
+           /* ---------------------------------------------------- */
+           /* our services */
+
+           .title {
+               font-size: 22px;
+           }
+
+           .description {
+               font-size: 15px;
+           }
+
+           .service-images img {
+               height: 180px;
+           }
+       }
+
+       @media (max-width: 480px) {
+           .kalyam-heading {
+               font-size: 1.8em;
+           }
+
+           .carousel-overlay-content h4 {
+               font-size: 1em;
+           }
+
+           .carousel-overlay-content p {
+               font-size: 0.8em;
+           }
+       }
