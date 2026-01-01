@@ -1,6 +1,6 @@
 // server.js
 const http = require("http");
-const database = require("./db-server");
+const database = require("./database");
 
 const server = http.createServer((req, res) => {
 
