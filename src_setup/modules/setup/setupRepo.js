@@ -105,17 +105,48 @@ exports.createInstitutionProfile = async (data) => {
   );
 };
 
-// ONBOARDING
-exports.createOnboardingSession = async (data) => {
+exports.updateTenantPrimaryInstitution = async (tenantId, institutionId) => {
   await db.query(
+    `UPDATE tenant
+     SET primary_institution_id = $1
+     WHERE id = $2`,
+    [institutionId, tenantId]
+  );
+};
+
+// src/modules/setup/setupRepo.js
+
+exports.findActiveOnboarding = async (tenantId) => {
+  const { rows } = await pool.query(
+    `SELECT * FROM onboarding_session
+     WHERE tenant_id = $1
+     AND status IN ('not_started', 'in_progress')
+     LIMIT 1`,
+    [tenantId]
+  );
+  return rows[0];
+};
+
+exports.createOnboardingSession = async ({
+  tenantId,
+  institutionId,
+  startedBy
+}) => {
+  const { rows } = await pool.query(
     `INSERT INTO onboarding_session
      (id, tenant_id, institution_id, status, started_at)
-     VALUES ($1,$2,$3,$4,NOW())`,
-    [
-      data.id,
-      data.tenant_id,
-      data.institution_id,
-      data.status
-    ]
+     VALUES (gen_random_uuid(), $1, $2, 'in_progress', now())
+     RETURNING *`,
+    [tenantId, institutionId]
+  );
+  return rows[0];
+};
+
+exports.createFirstStep = async (sessionId) => {
+  await pool.query(
+    `INSERT INTO onboarding_step_progress
+     (id, onboarding_session_id, step_key, state)
+     VALUES (gen_random_uuid(), $1, 'school_info', 'pending')`,
+    [sessionId]
   );
 };

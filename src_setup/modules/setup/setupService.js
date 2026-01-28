@@ -107,3 +107,34 @@ exports.createInstitution = async (payload) => {
   
     return { institution_id: institutionId };
   };
+
+// src/modules/setup/setupService.js
+// const setupRepo = require('./setupRepo');
+
+exports.startOnboarding = async ({
+  tenant_id,
+  institution_id,
+  started_by
+}) => {
+  if (!tenant_id || !institution_id) {
+    throw new Error('tenant_id and institution_id are required');
+  }
+
+  // 1. check existing
+  const existing = await repo.findActiveOnboarding(tenant_id);
+  if (existing) {
+    return existing;
+  }
+
+  // 2. create session
+  const session = await repo.createOnboardingSession({
+    tenantId: tenant_id,
+    institutionId: institution_id,
+    startedBy: started_by
+  });
+
+  // 3. first step
+  await repo.createFirstStep(session.id);
+
+  return session;
+};

@@ -30,3 +30,20 @@ exports.createInstitution = async (req, res) => {
       });
     }
   };
+
+
+  // src/modules/setup/setupController.js
+exports.startOnboarding = async (req, res) => {
+  try {
+    const data = await setupService.startOnboarding(req.body);
+    res.status(201).json({
+      success: true,
+      data
+    });
+  } catch (err) {
+    res.status(400).json({
+      success: false,
+      message: err.message
+    });
+  }
+};
