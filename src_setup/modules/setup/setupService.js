@@ -56,85 +56,113 @@ exports.createTenant = async (payload) => {
   };
 };
 
-// New service method for creating an institution
-const { randomUUID } = require('crypto');
+// // New service method for creating an institution
+// const { randomUUID } = require('crypto');
 
 
-exports.createInstitution = async (payload) => {
-    const {
-      tenant_id,
-      institution_type,
-      name,
-      legal_name,
-      grade_range,
-      boarding_flag,
-      admin_user_id
-    } = payload;
+// exports.createInstitution = async (payload) => {
+//     const {
+//       tenant_id,
+//       institution_type,
+//       name,
+//       legal_name,
+//       grade_range,
+//       boarding_flag,
+//       admin_user_id
+//     } = payload;
   
-    if (!tenant_id || !institution_type || !name) {
-      throw new Error('tenant_id, institution_type, name required');
-    }
+//     if (!tenant_id || !institution_type || !name) {
+//       throw new Error('tenant_id, institution_type, name required');
+//     }
   
-    const tenant = await repo.getTenantById(tenant_id);
-    if (!tenant) throw new Error('Tenant not found');
+//     const tenant = await repo.getTenantById(tenant_id);
+//     if (!tenant) throw new Error('Tenant not found');
   
-    const institutionId = randomUUID();
+//     const institutionId = randomUUID();
   
-    await repo.createInstitution({
-      id: institutionId,
-      tenant_id,
-      institution_type,
-      name,
-      legal_name,
-      grade_range,
-      boarding_flag,
-      status: 'active',
-      created_by: admin_user_id
-    });
+//     await repo.createInstitution({
+//       id: institutionId,
+//       tenant_id,
+//       institution_type,
+//       name,
+//       legal_name,
+//       grade_range,
+//       boarding_flag,
+//       status: 'active',
+//       created_by: admin_user_id
+//     });
   
-    await repo.createInstitutionProfile({
-      institution_id: institutionId,
-      display_name: name
-    });
+//     await repo.createInstitutionProfile({
+//       institution_id: institutionId,
+//       display_name: name
+//     });
   
-    // first institution only
-    if (!tenant.primary_institution_id) {
-      await repo.updateTenantPrimaryInstitution(
-        tenant_id,
-        institutionId
-      );
-    }
+//     // first institution only
+//     if (!tenant.primary_institution_id) {
+//       await repo.updateTenantPrimaryInstitution(
+//         tenant_id,
+//         institutionId
+//       );
+//     }
   
-    return { institution_id: institutionId };
-  };
+//     return { institution_id: institutionId };
+//   };
 
+// ==============================================================
 // src/modules/setup/setupService.js
 // const setupRepo = require('./setupRepo');
 
+// exports.startOnboarding = async ({
+//   tenant_id,
+//   institution_id,
+//   started_by
+// }) => {
+//   if (!tenant_id || !institution_id) {
+//     throw new Error('tenant_id and institution_id are required');
+//   }
+
+//   // 1. check existing
+//   const existing = await repo.findActiveOnboarding(tenant_id);
+//   if (existing) {
+//     return existing;
+//   }
+
+//   // 2. create session
+//   const session = await repo.createOnboardingSession({
+//     tenantId: tenant_id,
+//     institutionId: institution_id,
+//     startedBy: started_by
+//   });
+
+//   // 3. first step
+//   await repo.createFirstStep(session.id);
+
+//   return session;
+// };
+
+
+// UPDATE ONBOARDING SERVICE =====================
 exports.startOnboarding = async ({
   tenant_id,
   institution_id,
   started_by
 }) => {
   if (!tenant_id || !institution_id) {
-    throw new Error('tenant_id and institution_id are required');
+    throw new Error('tenant_id and institution_id required');
   }
 
-  // 1. check existing
-  const existing = await repo.findActiveOnboarding(tenant_id);
-  if (existing) {
-    return existing;
-  }
+  const existing = await setupRepo.findActiveOnboarding(
+    tenant_id,
+    institution_id
+  );
 
-  // 2. create session
-  const session = await repo.createOnboardingSession({
+  if (existing) return existing;
+
+  const session = await setupRepo.createOnboardingSession({
     tenantId: tenant_id,
     institutionId: institution_id,
     startedBy: started_by
   });
-
-  // 3. first step
-  await repo.createFirstStep(session.id);
 
   return session;
 };

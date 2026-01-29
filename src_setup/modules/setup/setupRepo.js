@@ -62,57 +62,57 @@ exports.updateTenantPrimaryInstitution = async (tenantId, institutionId) => {
   );
 };
 
-// ============================================================
-// INSTITUTION
-exports.createInstitution = async (data) => {
-  const {
-    id,
-    tenant_id,
-    institution_type,
-    name,
-    legal_name,
-    grade_range,
-    boarding_flag,
-    status,
-    created_by
-  } = data;
+// // ============================================================
+// // INSTITUTION
+// exports.createInstitution = async (data) => {
+//   const {
+//     id,
+//     tenant_id,
+//     institution_type,
+//     name,
+//     legal_name,
+//     grade_range,
+//     boarding_flag,
+//     status,
+//     created_by
+//   } = data;
 
-  await db.query(
-    `INSERT INTO institution
-     (id, tenant_id, institution_type, name, legal_name,
-      grade_range, boarding_flag, status, created_at, created_by)
-     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,NOW(),$9)`,
-    [
-      id,
-      tenant_id,
-      institution_type,
-      name,
-      legal_name,
-      grade_range,
-      boarding_flag,
-      status,
-      created_by
-    ]
-  );
-};
+//   await db.query(
+//     `INSERT INTO institution
+//      (id, tenant_id, institution_type, name, legal_name,
+//       grade_range, boarding_flag, status, created_at, created_by)
+//      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,NOW(),$9)`,
+//     [
+//       id,
+//       tenant_id,
+//       institution_type,
+//       name,
+//       legal_name,
+//       grade_range,
+//       boarding_flag,
+//       status,
+//       created_by
+//     ]
+//   );
+// };
 
-exports.createInstitutionProfile = async (data) => {
-  await db.query(
-    `INSERT INTO institution_profile
-     (institution_id, display_name, updated_at)
-     VALUES ($1,$2,NOW())`,
-    [data.institution_id, data.display_name]
-  );
-};
+// exports.createInstitutionProfile = async (data) => {
+//   await db.query(
+//     `INSERT INTO institution_profile
+//      (institution_id, display_name, updated_at)
+//      VALUES ($1,$2,NOW())`,
+//     [data.institution_id, data.display_name]
+//   );
+// };
 
-exports.updateTenantPrimaryInstitution = async (tenantId, institutionId) => {
-  await db.query(
-    `UPDATE tenant
-     SET primary_institution_id = $1
-     WHERE id = $2`,
-    [institutionId, tenantId]
-  );
-};
+// exports.updateTenantPrimaryInstitution = async (tenantId, institutionId) => {
+//   await db.query(
+//     `UPDATE tenant
+//      SET primary_institution_id = $1
+//      WHERE id = $2`,
+//     [institutionId, tenantId]
+//   );
+// };
 
 // src/modules/setup/setupRepo.js
 

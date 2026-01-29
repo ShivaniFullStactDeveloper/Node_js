@@ -1,17 +1,3 @@
-// require('dotenv').config();
-// const app = require('./app');
-
-// const PORT = process.env.PORT || 3000;
-
-// app.get('/', (req, res) => {
-//   res.send('Hello, World!');
-// });
-
-// app.listen(PORT, () => {
-//   console.log(`Server running on port ${PORT}`);
-// });
-
-
 require("dotenv").config();
 // Initialize database connection
 require("./config/database");
@@ -21,7 +7,7 @@ const app = require("./app");
 const PORT = process.env.PORT || 3000;
 // Basic route
 app.get("/", (req, res) => {
-  res.send("Hello, World!");
+  res.send("Welcome to schoolcoreOs setup server!");
 });
 // Start server
 app.listen(PORT, () => {
