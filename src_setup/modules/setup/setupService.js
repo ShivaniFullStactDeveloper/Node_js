@@ -166,3 +166,38 @@ exports.startOnboarding = async ({
 
   return session;
 };
+
+// ======================================================================
+// Enable Default Modules Service
+const moduleRepo = require('../module_catalog/moduleRepo');
+// const onboardingRepo = require('../onboarding/onboardingRepo');
+
+exports.enableDefaultModules = async ({
+  institution_id,
+  institution_type,
+  onboarding_session_id
+}) => {
+  // 1️ Fetch defaults
+  const defaultModules =
+    await moduleRepo.getDefaultModulesByInstitutionType(
+      institution_type
+    );
+
+  // 2️ Enable modules
+  await moduleRepo.enableModulesForInstitution(
+    institution_id,
+    defaultModules
+  );
+
+  // 3 Mark onboarding step completed
+  // if (onboarding_session_id) {
+  //   await onboardingRepo.completeStep({
+  //     onboarding_session_id,
+  //     step_key: 'modules_enabled'
+  //   });
+  // }
+
+  return {
+    enabled_modules: defaultModules.map(m => m.module_key)
+  };
+};
