@@ -1,4 +1,4 @@
-const db = require('../../config/database');
+const pool = require('../../config/database');
 
 exports.insertTenant = async (t) => {
   const q = `
@@ -6,7 +6,7 @@ exports.insertTenant = async (t) => {
     (id, tenant_kind, name, status, default_language, created_at)
     VALUES ($1, $2, $3, $4, $5, NOW())
   `;
-  await db.query(q, [
+  await pool.query(q, [
     t.id, t.tenant_kind, t.name, t.status, t.default_language
   ]);
 };
@@ -17,7 +17,7 @@ exports.insertUser = async (u) => {
     (id, email, password_hash, status, created_at)
     VALUES ($1, $2, $3, $4, NOW())
   `;
-  await db.query(q, [
+  await pool.query(q, [
     u.id, u.email, u.password_hash, u.status
   ]);
 };
@@ -28,7 +28,7 @@ exports.insertTenantUser = async (tu) => {
     (tenant_id, user_id, is_owner, status, created_at)
     VALUES ($1, $2, $3, $4, NOW())
   `;
-  await db.query(q, [
+  await pool.query(q, [
     tu.tenant_id, tu.user_id, tu.is_owner, tu.status
   ]);
 };
@@ -39,9 +39,10 @@ exports.insertOnboardingSession = async ({ tenant_id, status }) => {
     (id, tenant_id, status, started_at)
     VALUES (uuid_generate_v4(), $1, $2, NOW())
   `;
-  await db.query(q, [tenant_id, status]);
+  await pool.query(q, [tenant_id, status]);
 };
 
+const db = require('../../config/database');
 
 // TENANT get 
 exports.getTenantById = async (tenantId) => {
@@ -115,54 +116,13 @@ exports.updateTenantPrimaryInstitution = async (tenantId, institutionId) => {
 
 // src/modules/setup/setupRepo.js
 
-// exports.findActiveOnboarding = async (tenantId) => {
-//   const { rows } = await db.query(
-//     `SELECT * FROM onboarding_session
-//      WHERE tenant_id = $1
-//      AND status IN ('not_started', 'in_progress')
-//      LIMIT 1`,
-//     [tenantId]
-//   );
-//   return rows[0];
-// };
-
-// exports.createOnboardingSession = async ({
-//   tenantId,
-//   institutionId,
-//   startedBy
-// }) => {
-//   const { rows } = await db.query(
-//     `INSERT INTO onboarding_session
-//      (id, tenant_id, institution_id, status, started_at)
-//      VALUES (gen_random_uuid(), $1, $2, 'in_progress', now())
-//      RETURNING *`,
-//     [tenantId, institutionId]
-//   );
-//   return rows[0];
-// };
-
-// exports.createFirstStep = async (sessionId) => {
-//   await db.query(
-//     `INSERT INTO onboarding_step_progress
-//      (id, onboarding_session_id, step_key, state)
-//      VALUES (gen_random_uuid(), $1, 'school_info', 'pending')`,
-//     [sessionId]
-//   );
-// };
-
-
-// updated code with institutionId in findActiveOnboarding
-exports.findActiveOnboarding = async (tenantId, institutionId) => {
-  const { rows } = await db.query(
-    `
-    SELECT *
-    FROM onboarding_session
-    WHERE tenant_id = $1
-      AND institution_id = $2
-      AND status IN ('not_started', 'in_progress')
-    LIMIT 1
-    `,
-    [tenantId, institutionId]
+exports.findActiveOnboarding = async (tenantId) => {
+  const { rows } = await pool.query(
+    `SELECT * FROM onboarding_session
+     WHERE tenant_id = $1
+     AND status IN ('not_started', 'in_progress')
+     LIMIT 1`,
+    [tenantId]
   );
   return rows[0];
 };
@@ -172,26 +132,21 @@ exports.createOnboardingSession = async ({
   institutionId,
   startedBy
 }) => {
-  const { rows } = await db.query(
-    `
-    INSERT INTO onboarding_session
-      (id, tenant_id, institution_id, status, started_by, started_at)
-    VALUES
-      (gen_random_uuid(), $1, $2, 'in_progress', $3, now())
-    RETURNING *
-    `,
-    [tenantId, institutionId, startedBy]
+  const { rows } = await pool.query(
+    `INSERT INTO onboarding_session
+     (id, tenant_id, institution_id, status, started_at)
+     VALUES (gen_random_uuid(), $1, $2, 'in_progress', now())
+     RETURNING *`,
+    [tenantId, institutionId]
   );
   return rows[0];
 };
 
-// ============================================================
-// TENANT GET BY ID
-exports.getById = async (tenantId) => {
-  const { rows } = await db.query(
-    `SELECT * FROM tenant WHERE id = $1`,
-    [tenantId]
+exports.createFirstStep = async (sessionId) => {
+  await pool.query(
+    `INSERT INTO onboarding_step_progress
+     (id, onboarding_session_id, step_key, state)
+     VALUES (gen_random_uuid(), $1, 'school_info', 'pending')`,
+    [sessionId]
   );
-
-  return rows[0]; // undefined if not found
 };
