@@ -1,13 +1,22 @@
 const router = require("express").Router();
 const controller = require("./moduleController");
 
-// Admin – create module
+// Create module with institute configuration
 router.post("/create", controller.createModule);
 
-// STEP-4 screen – get modules for institution
+// Get modules for institution setup (enabled + disabled)
 router.get("/", controller.getModulesForInstitution);
 
-// STEP-4 save – enable / disable
-// router.post("/assign", controller.assignModules);
+// Get only enable modules for institution
+router.get("/enabled", controller.getEnabledModules);
+
+// Enable or disable module for institution
+router.post("/assign", controller.assignModules);
+
+// Create permissions under a module
+router.post("/permissions", controller.createModulePermissions);
+
+
+
 
 module.exports = router;

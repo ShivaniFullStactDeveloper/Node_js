@@ -1,28 +1,19 @@
 const service = require("./tosService");
 
+// Create terms of service
 exports.createTos = async (req, res) => {
-  try {
-    const data = await service.createTos(req.body);
-    res.status(201).json({ success: true, data });
-  } catch (e) {
-    res.status(400).json({ success: false, error: e.message });
-  }
+  const data = await service.createTos(req.body);
+  res.status(201).json({ success: true, data });
 };
 
+// Get active terms of service
 exports.getActiveTos = async (req, res) => {
-  try {
-    const data = await service.getActiveTos(req.query);
-    res.json({ success: true, data });
-  } catch (e) {
-    res.status(400).json({ success: false, error: e.message });
-  }
+  const data = await service.getActiveTos(req.query);
+  res.json({ success: true, data });
 };
 
+// Accept terms of service
 exports.acceptTos = async (req, res) => {
-  try {
-    await service.acceptTos(req.body);
-    res.json({ success: true, message: "ToS accepted" });
-  } catch (e) {
-    res.status(400).json({ success: false, error: e.message });
-  }
+  await service.acceptTos(req.body);
+  res.json({ success: true, message: "ToS accepted" });
 };

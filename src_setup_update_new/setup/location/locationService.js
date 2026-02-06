@@ -1,6 +1,7 @@
 const db = require("../../config/database");
 const repo = require("./locationRepo");
 
+// Save institution location & regional configuration
 exports.saveLocation = async (payload) => {
   if (!payload.institution_id)
     throw new Error("institution_id required");
@@ -10,27 +11,29 @@ exports.saveLocation = async (payload) => {
   try {
     await client.query("BEGIN");
 
-    //  ADDRESS
+    //  Address
     await repo.upsertAddress(client, payload);
 
-    //  REGIONAL SETTINGS
+    //  Regional settings
     await repo.upsertRegional(client, payload);
 
-    // WORKING DAYS
+    // Update working days
     await repo.replaceWorkingDays(
       client,
       payload.institution_id,
       payload.working_days || []
     );
-
+ // Commit transaction
     await client.query("COMMIT");
 
     return { institution_id: payload.institution_id };
 
   } catch (e) {
+    // Rollback on error
     await client.query("ROLLBACK");
     throw e;
   } finally {
+    // Release DB connection
     client.release();
   }
 };

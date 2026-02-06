@@ -1,11 +1,12 @@
 const db = require("../../config/database");
 const repo = require("./institutionRepo");
 const { hashPassword } = require("../../utils/passwordUtils");
+const moduleService = require("../modules/moduleService");
 
+// Setup tenant, institution, admin and default configs
 exports.setupInstitution = async (payload) => {
 
-  //  BASIC VALIDATION (simple if-else)
-
+  // Basic validation
   if (!payload.tenant)
     throw new Error("Tenant data is required");
 
@@ -24,26 +25,33 @@ exports.setupInstitution = async (payload) => {
   if (!payload.super_admin.password)
     throw new Error("Admin password is required");
 
-  // DB TRANSACTION
+  // Start DB transaction
   const client = await db.connect();
 
   try {
     await client.query("BEGIN");
 
-    // TENANT
+    // Create tenant
     const tenant = await repo.createTenant(
       client,
       payload.tenant
     );
 
-    // INSTITUTION
+    // Create institution
     const institution = await repo.createInstitution(
       client,
       tenant.id,
       payload.institution
     );
 
-    // SUPER ADMIN
+    // Auto attach default modules for institution type
+    await moduleService.seedInstitutionModules(
+      client,
+      institution.id,
+      institution.institute_type
+    );
+
+    // Create super admin
     const passwordHash = await hashPassword(
       payload.super_admin.password
     );
@@ -55,7 +63,7 @@ exports.setupInstitution = async (payload) => {
       passwordHash
     );
 
-    // THEME (optional)
+    // Save theme settings (optional)
     if (payload.theme) {
       await repo.createTheme(
         client,
@@ -64,13 +72,14 @@ exports.setupInstitution = async (payload) => {
       );
     }
 
-    // LANGUAGES
+    // Add institution languages
     await repo.addLanguages(
       client,
       institution.id,
       payload.languages
     );
 
+    // Commit transaction
     await client.query("COMMIT");
 
     return {
@@ -80,9 +89,11 @@ exports.setupInstitution = async (payload) => {
     };
 
   } catch (err) {
+    // Rollback on error
     await client.query("ROLLBACK");
     throw err;
   } finally {
+    // Release DB connection
     client.release();
   }
 };

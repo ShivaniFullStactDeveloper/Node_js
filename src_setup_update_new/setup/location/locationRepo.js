@@ -1,3 +1,4 @@
+// Insert or update institution address
 exports.upsertAddress = async (client, data) => {
     await client.query(
       `
@@ -28,6 +29,7 @@ exports.upsertAddress = async (client, data) => {
     );
   };
   
+  // Insert or update regional settings
   exports.upsertRegional = async (client, data) => {
     await client.query(
       `
@@ -46,6 +48,7 @@ exports.upsertAddress = async (client, data) => {
     );
   };
   
+ // Replace institution working days
   exports.replaceWorkingDays = async (
     client,
     institutionId,

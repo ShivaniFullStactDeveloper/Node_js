@@ -1,19 +1,14 @@
 const service = require("./institutionService");
 
+// Setup institution 
 exports.setupInstitution = async (req, res) => {
-  try {
-    const result = await service.setupInstitution(req.body);
+  // Call service to handle full institution setup logic
+  const result = await service.setupInstitution(req.body);
 
-    res.status(201).json({
-      success: true,
-      message: "Institution setup completed",
-      data: result
-    });
-
-  } catch (err) {
-    res.status(400).json({
-      success: false,
-      error: err.message
-    });
-  }
+  // Send success response after setup completion
+  res.status(201).json({
+    success: true,
+    message: "Institution setup completed",
+    data: result
+  });
 };
