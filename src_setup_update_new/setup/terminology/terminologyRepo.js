@@ -4,7 +4,7 @@ exports.createGroup = (client, data) => {
       `INSERT INTO terminology_groups (group_key, display_name)
        VALUES ($1, $2)
        RETURNING *`,
-      [data.code, data.name]
+      [data.group_key, data.display_name]
     );
   };
   

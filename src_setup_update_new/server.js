@@ -7,7 +7,7 @@ const app = require("./app");
 const PORT = process.env.PORT || 3000;
 // Basic route
 app.get("/", (req, res) => {
-  res.send("Welcome to schoolcoreOs setup server!!!");
+  res.send("Welcome to schoolcoreOs server!");
 });
 // Start server
 app.listen(PORT, () => {

@@ -44,7 +44,7 @@ exports.setupInstitution = async (payload) => {
       payload.institution
     );
 
-    // Auto attach default modules for institution type
+    // // Auto attach default modules for institution type
     await moduleService.seedInstitutionModules(
       client,
       institution.id,

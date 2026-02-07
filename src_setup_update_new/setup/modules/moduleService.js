@@ -79,17 +79,17 @@ exports.getEnabledModules = async (institutionId) => {
 };
 
 // AUTO SEED (CALL FROM INSTITUTION SERVICE)
-// exports.seedInstitutionModules = async (
-//   client,
-//   institutionId,
-//   instituteType
-// ) => {
-//   await repo.seedInstitutionModules(
-//     client,
-//     institutionId,
-//     instituteType
-//   );
-// };
+exports.seedInstitutionModules = async (
+  client,
+  institutionId,
+  instituteType
+) => {
+  await repo.seedInstitutionModules(
+    client,
+    institutionId,
+    instituteType
+  );
+};
 
 // Auto attach modules based on institute type
 exports.seedModulesForInstitution = async (payload) => {

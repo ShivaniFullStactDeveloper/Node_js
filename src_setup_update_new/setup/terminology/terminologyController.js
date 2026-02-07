@@ -2,9 +2,9 @@ const service = require("./terminologyService");
 
 // Create terminology group
 exports.createGroup = async (req, res) => {
-  const { code, name } = req.body;
-  if (!code || !name) {
-    return res.status(400).json({ success: false, message: "code & name required" });
+  const { group_key, display_name } = req.body;
+  if (!group_key || !display_name) {
+    return res.status(400).json({ success: false, message: "group_key & display_name required" });
   }
   const data = await service.createGroup(req.body);
   res.json({ success: true, data });

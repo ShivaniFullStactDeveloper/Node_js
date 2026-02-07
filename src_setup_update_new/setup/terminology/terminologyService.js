@@ -15,7 +15,7 @@ exports.createGroup = async (data) => {
 // Get all terminology groups
 exports.getGroups = async () => {
   const { rows } = await db.query(
-    `SELECT * FROM terminology_groups ORDER BY name`
+    `SELECT * FROM terminology_groups ORDER BY display_name`
   );
   return rows;
 };
